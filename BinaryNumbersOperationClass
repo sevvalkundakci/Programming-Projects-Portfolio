@@ -1,0 +1,162 @@
+#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+
+class BinaryNumber{
+private:
+    bool* l;
+    double size;
+    
+public:
+    BinaryNumber(bool defaultValue = false ,double s = 0): l(nullptr),size(s){
+        l = new bool[size];
+        for(int i = 0; i < size; ++i)
+            l[i] = defaultValue;
+    }
+    BinaryNumber(const char *binaryString){
+        size = strlen(binaryString);
+        if(l == 0)
+        {
+            l = new bool[size];
+            for(int i = 0; i < size; ++i)
+            {
+                l[i] = binaryString[i] == '1' ? true : false;
+            }
+        }
+    }
+    BinaryNumber(int val){
+        vector<bool>bNumber;
+        
+        while(val > 0){
+            int digit = val % 2;
+            val = val / 2;
+            bNumber.push_back(digit);
+        }
+        size = bNumber.size();
+        l = new bool[size];
+        for(int i = 0; i < size; ++i)
+        {
+            l[i] = bNumber[size - 1 - i];
+        }
+        
+    }
+    BinaryNumber(const BinaryNumber& other){
+        size = other.size;
+        l = new bool[other.size];
+        for(int i = 0; i < size; ++i)
+        {
+            l[i] = other.l[i];
+        }
+    }
+    BinaryNumber& operator=(const BinaryNumber& other){
+        if(this == &other)
+            return *this;
+        
+        delete [] l;
+        size = other.size;
+        l = new bool[size];
+        
+        
+        for(int i = 0; i < size; ++i)
+        {
+            l[i] = other.l[i];
+        }
+        return *this;
+    }
+    ~BinaryNumber(){
+        delete [] l;
+        l = nullptr;
+    }
+    
+    BinaryNumber operator and(const BinaryNumber& arg)const{
+        if(this-> size != arg.size)
+            exit(0);
+        BinaryNumber res;
+        res.l = new bool[size];
+        res.size = this->size;
+        
+        for(int i = 0; i < size; ++i)
+        {
+            res.l[i] = this->l[i] & arg.l[i];
+        }
+        return res;
+    }
+    BinaryNumber operator or(const BinaryNumber& other)const{
+        BinaryNumber res(*this);
+        
+        for(int i = 0; i < size; ++i)
+        {
+            res.l[i] = this->l[i] | other.l[i];
+        }
+        return res;
+    }
+    BinaryNumber operator+(const BinaryNumber& other)const{
+        int maxSize = max(size,other.size);
+        bool* result = new bool[maxSize + 1]();
+        bool carry = false;
+        
+        int i = size - 1;
+        int j = other.size - 1;
+        int k = 0;
+        
+        while(i >= 0 || j>= 0 || carry)
+        {
+            bool bit1 = (i >= 0) ? l[i] : false;
+            bool bit2 = (j >= 0) ? other.l[i] : false;
+            
+            bool sum = bit1 ^ bit2 ^ carry;
+            carry = (bit1 && bit2) || (carry ^ (bit1 && bit2));
+            
+            result[k++] = sum;
+            i--;
+            j--;
+        }
+        BinaryNumber res(0);
+        res.size = k;
+        delete [] res.l;
+        res.l = result;
+        return res;
+    }
+    BinaryNumber operator-(const BinaryNumber& other)const{
+        int maxSize = max(size,other.size);
+        bool* result = new bool[maxSize]();
+        bool borrow = false;
+        int i = size - 1;
+        int j = other.size - 1;
+        int k = maxSize - 1;
+        
+        while(i >= 0 || j >= 0 || borrow)
+        {
+            bool bit1 = (i >= 0) ? l[i] : false;
+            bool bit2 = (j >= 0) ? other.l[i] : false;
+            
+            bool diff = bit1 - bit2 - borrow;
+            
+            if(bit1 - bit2 - borrow < 0)
+            {
+                borrow = true;
+                diff = 1;
+            }
+            else
+            {
+                borrow = false;
+            }
+            result[k--] = diff;
+            i--;
+            j--;
+        }
+        BinaryNumber res(result,maxSize);
+        delete [] result;
+        return res;
+    }
+    BinaryNumber operator~() const{
+        BinaryNumber inverted(*this);
+        
+        for(int i = 0; i < size; ++i)
+        {
+            inverted.l[i] = !l[i];
+        }
+        return inverted;
+    }
+};
