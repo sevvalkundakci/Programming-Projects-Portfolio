@@ -61,7 +61,7 @@ def plot_heatmap(gaze_points):
     
     plt.figure(figsize=(10, 6))
     sns.heatmap(heatmap.T, cmap="Reds", cbar=True)
-    plt.gca().invert_yaxis()  # Flip y-axis to match screen
+    plt.gca().invert_yaxis() 
     plt.title("Eye Gaze Heatmap")
     plt.show()
 
