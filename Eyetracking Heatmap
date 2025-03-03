@@ -27,7 +27,8 @@ while True:
     ret, frame = cap.read()
     if not ret:
         break
-    
+
+    frame = cv2.resize(frame, (640, 480))
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     faces = detector(gray)
     
