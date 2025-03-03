@@ -1,0 +1,371 @@
+#include <iostream>
+using namespace std;
+
+Food::Food(string name, int quantity, double pricePerUnit): name(name), quantity(quantity),pricePerUnit(pricePerUnit){};
+string Food::getName()const{
+    return name;
+   }
+Food::~Food(){};
+int Food:: getQuantity()const{
+    return quantity;
+   }
+double Food:: getPrice()const{
+    return pricePerUnit;
+   }
+void Food:: setName(string name){
+    this->name = name;
+   }
+void Food:: setQuantity(int quantity){
+    this->quantity = quantity;
+   }
+void Food:: setpricePerUnit(double pricePerUnit){
+    this->pricePerUnit = pricePerUnit;
+   }
+void Food:: totalCost(){
+    double cost;
+    cost = quantity * pricePerUnit;
+    cout << "Total cost for the specified product "<< name << " is: " << cost << endl;
+   }
+void Food:: displayFood()const{
+    cout <<"Product name: " << name
+    <<"\nQuantity: " << quantity
+    <<"\nPrice per unit: " << pricePerUnit << endl;
+   }
+Clothing::Clothing() : name(""), quantity(0), price(0.0), size("") {
+    // Body can be empty if no additional logic is required
+}
+
+// Other constructor definitions
+Clothing::Clothing(string name, int quantity, double price, string size)
+    : name(name), quantity(quantity), price(price), size(size) {
+    
+}
+
+string Clothing:: getName()const{
+    return name;
+}
+Clothing::~Clothing(){};
+int Clothing:: getQuantity()const{
+    return quantity;
+}
+double Clothing:: getPrice()const{
+    return price;
+}
+string Clothing:: getSize()const{
+    return size;
+}
+void Clothing:: setName(string name){
+    this->name = name;
+}
+void Clothing:: setQuantity(int quantity){
+    this->quantity = quantity;
+}
+void Clothing:: setPrice(double price){
+    this->price = price;
+}
+void Clothing:: setSize(int size){
+    this->size = size;
+}
+void Clothing:: totalCost(){
+    double cost;
+    cost = quantity * price;
+    cout << "Total cost is: " << cost << endl;
+}
+void Clothing:: displayClothing()const{
+    cout << "Clothing name: " << name
+    << "\nQuantity: " << quantity
+    << "\nPrice: " << price
+    << "\nSize: " << size << endl;
+}
+Electronics::Electronics(string name, int quantity, double price, string brand)
+: name(name), quantity(quantity), price(price), brand(brand) {};
+Electronics::~Electronics(){};
+string Electronics:: getName()const{
+    return name;
+}
+int Electronics:: getQuantity()const{
+    return quantity;
+}
+double Electronics:: getPrice()const{
+    return price;
+}
+string Electronics:: getBrand()const{
+    return brand;
+}
+void Electronics:: setName(string name){
+    this->name = name;
+}
+void Electronics:: setQuantity(int quantity){
+    this->quantity = quantity;
+}
+void Electronics:: setPrice(double price){
+    this->price = price;
+}
+void Electronics:: setBrand(string brand){
+    this->brand = brand;
+}
+void Electronics:: totalCost(){
+    double cost;
+    cost = quantity * price;
+    cout << "Total cost is: " << cost << endl;
+}
+void Electronics:: displayElectronics()const{
+    cout << "Electronics name: " << name
+    << "\nQuantity: " << quantity
+    << "\nPrice: " << price
+    << "\nBrand: " << brand << endl;
+}
+ShoppingList::ShoppingList()
+: foodCount(0), electronicsCount(0), clothingCount(0) {
+
+}
+ShoppingList::~ShoppingList(){};
+void ShoppingList::addFood(const Food& food) {
+    if (foodCount < 10) {
+        foods[foodCount++] = food;
+    } else {
+        cout << "Food list is full!" << endl;
+    }
+}
+
+
+void ShoppingList::addElectronics(const Electronics& electronic) {
+    if (electronicsCount < 10) {
+        electronics[electronicsCount++] = electronic;
+    } else {
+        cout << "Electronics list is full!" << endl;
+    }
+}
+
+
+void ShoppingList::addClothing(const Clothing& clothing) {
+    if (clothingCount < 10) {
+        clothings[clothingCount++] = clothing;
+    } else {
+        cout << "Clothing list is full!" << endl;
+    }
+}
+
+
+void ShoppingList::removeFood(const string& foodName) {
+    int index = -1;
+    for (int i = 0; i < foodCount; ++i) {
+        if (foods[i].getName() == foodName) {
+            index = i;
+            break;
+        }
+    }
+
+    if (index == -1) {
+        cout << "Food not found: " << foodName << endl;
+        return;
+    }
+
+   
+    for (int i = index; i < foodCount - 1; ++i) {
+        foods[i] = foods[i + 1];
+    }
+    --foodCount;
+    cout << "Food removed: " << foodName << endl;
+}
+
+
+void ShoppingList::removeElectronics(const string& electronicName) {
+    int index = -1;
+    for (int i = 0; i < electronicsCount; ++i) {
+        if (electronics[i].getName() == electronicName) {
+            index = i;
+            break;
+        }
+    }
+
+    if (index == -1) {
+        cout << "Electronics not found: " << electronicName << endl;
+        return;
+    }
+
+   
+    for (int i = index; i < electronicsCount - 1; ++i) {
+        electronics[i] = electronics[i + 1];
+    }
+    --electronicsCount;
+    cout << "Electronics removed: " << electronicName << endl;
+}
+
+
+void ShoppingList::removeClothing(const string& clothingName) {
+    int index = -1;
+    for (int i = 0; i < clothingCount; ++i) {
+        if (clothings[i].getName() == clothingName) {
+            index = i;
+            break;
+        }
+    }
+
+    if (index == -1) {
+        cout << "Clothing not found: " << clothingName << endl;
+        return;
+    }
+
+  
+    for (int i = index; i < clothingCount - 1; ++i) {
+        clothings[i] = clothings[i + 1];
+    }
+    --clothingCount;
+    cout << "Clothing removed: " << clothingName << endl;
+}
+
+
+void ShoppingList::clearList() {
+    foodCount = 0;
+    electronicsCount = 0;
+    clothingCount = 0;
+    cout << "Shopping list cleared!" << endl;
+}
+
+
+double ShoppingList::calculateCost() const {
+    double cost = 0.0;
+
+
+    for (int i = 0; i < foodCount; ++i) {
+        cost += foods[i].getPrice() * foods[i].getQuantity();
+    }
+
+  
+    for (int i = 0; i < electronicsCount; ++i) {
+        cost += electronics[i].getPrice() * electronics[i].getQuantity();
+    }
+
+
+    for (int i = 0; i < clothingCount; ++i) {
+        cost += clothings[i].getPrice() * clothings[i].getQuantity();
+    }
+
+    return cost;
+}
+void ShoppingList::printList()const{
+    cout << "Food items are:\n";
+    for(int i = 0; i < foodCount; ++i)
+    {
+        cout << foods[i].getName() << " ";
+    }
+    cout << "\nElectronics items are:\n";
+    for(int i = 0; i < electronicsCount; ++i)
+    {
+        cout << electronics[i].getName()<< " ";
+    }
+    cout << "\nClothing items are:\n";
+    for(int i = 0; i < clothingCount; ++i)
+    {
+        cout << clothings[i].getName() << " ";
+    }
+}
+void ShoppingList::saveToFile(const string& filename) const{
+    ofstream outFile(filename);
+    if(!outFile)
+    {
+        cout << "Error! File not found." << endl;
+        return;
+    }
+    for(int i = 0; i < foodCount; ++i){
+        outFile << "Foods: " << foods[i].getName() << "," << foods[i].getQuantity() << "," << foods[i].getPrice() << endl;
+    }
+    for(int i = 0; i < electronicsCount; ++i){
+        outFile << "Electronics: " << electronics[i].getName() << "," << electronics[i].getQuantity() << "," << electronics[i].getPrice() << "," << electronics[i].getBrand()<< endl;
+    }
+    for(int i = 0; i < clothingCount; ++i){
+        outFile << "Clothing: " << clothings[i].getName() << "," << clothings[i].getSize() << "," << clothings[i].getPrice() << "," << clothings[i].getQuantity() << endl;
+    }
+    cout << "Shopping list saved to file." << endl;
+}
+
+    void ShoppingList::loadFromFile(const string& filename) {
+        ifstream inFile(filename);
+        if (!inFile) {
+            cout << "No previous shopping list found. Starting fresh." << endl;
+            return;
+        }
+
+        cout << "Loading shopping list from file...\n";
+
+        string line;
+        while (getline(inFile, line)) {
+            stringstream ss(line);
+            string category, name, extra;
+            int quantity;
+            double price;
+
+            getline(ss, category, ',');
+            getline(ss, name, ',');
+            ss >> quantity;
+            ss.ignore(1); 
+            ss >> price;
+            ss.ignore(1);
+
+            if (category == "Food") {
+                addFood(Food(name, quantity, price));
+            } else if (category == "Electronics") {
+                getline(ss, extra, ',');
+                addElectronics(Electronics(name, quantity, price, extra));
+            } else if (category == "Clothing") {
+                getline(ss, extra, ',');
+                addClothing(Clothing(name, quantity, price, extra));
+            }
+        }
+
+        cout << "Shopping list loaded from file:\n";
+        printList();
+    }
+int main() {
+    ShoppingList myList;
+    myList.loadFromFile("shoppinglist.txt");
+    
+    int choice;
+        do {
+            cout << "\nShopping List Menu:\n";
+            cout << "1. Add Food\n";
+            cout << "2. Add Electronics\n";
+            cout << "3. Add Clothing\n";
+            cout << "4. View Shopping List\n";
+            cout << "5. Clear Shopping List\n";
+            cout << "6. Save Shopping List\n";
+            cout << "7. Exit\n";
+            cout << "Enter your choice: ";
+            cin >> choice;
+
+            if (choice == 1) {
+                string name;
+                int quantity;
+                double price;
+                cout << "Enter food name, quantity, and price: ";
+                cin >> name >> quantity >> price;
+                myList.addFood(Food(name, quantity, price));
+            } else if (choice == 2) {
+                string name, brand;
+                int quantity;
+                double price;
+                cout << "Enter electronics name, quantity, price, and brand: ";
+                cin >> name >> quantity >> price >> brand;
+                myList.addElectronics(Electronics(name, quantity, price, brand));
+            } else if (choice == 3) {
+                string name, size;
+                int quantity;
+                double price;
+                cout << "Enter clothing name, quantity, price, and size: ";
+                cin >> name >> quantity >> price >> size;
+                myList.addClothing(Clothing(name, quantity, price, size));
+            } else if (choice == 4) {
+                myList.printList();
+            } else if (choice == 5) {
+                myList.clearList();
+            } else if (choice == 6) {
+                myList.saveToFile("shoppinglistinput.txt");
+            }
+        } while (choice != 7);
+
+        myList.saveToFile("shoppinglistinput.txt");
+        cout << "Goodbye!" << endl;
+        return 0;
+    
+}
