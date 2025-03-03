@@ -1,0 +1,68 @@
+import cv2
+import dlib
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+from collections import deque
+
+
+detector = dlib.get_frontal_face_detector()
+predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")  
+
+
+left_eye_indices = list(range(36, 42))
+right_eye_indices = list(range(42, 48))
+
+def get_eye_center(landmarks, eye_indices):
+
+    x = sum(landmarks.part(i).x for i in eye_indices) // len(eye_indices)
+    y = sum(landmarks.part(i).y for i in eye_indices) // len(eye_indices)
+    return (x, y)
+
+
+gaze_points = deque(maxlen=500)
+
+cap = cv2.VideoCapture(0)
+while True:
+    ret, frame = cap.read()
+    if not ret:
+        break
+    
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    faces = detector(gray)
+    
+    for face in faces:
+        landmarks = predictor(gray, face)
+        left_eye_center = get_eye_center(landmarks, left_eye_indices)
+        right_eye_center = get_eye_center(landmarks, right_eye_indices)
+        
+        gaze_x = (left_eye_center[0] + right_eye_center[0]) // 2
+        gaze_y = (left_eye_center[1] + right_eye_center[1]) // 2
+        gaze_points.append((gaze_x, gaze_y))
+        
+        cv2.circle(frame, left_eye_center, 3, (255, 0, 0), -1)
+        cv2.circle(frame, right_eye_center, 3, (255, 0, 0), -1)
+    
+    cv2.imshow("Eye Tracking", frame)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+cap.release()
+cv2.destroyAllWindows()
+
+
+def plot_heatmap(gaze_points):
+    if not gaze_points:
+        print("No gaze data recorded.")
+        return
+    
+    x_coords, y_coords = zip(*gaze_points)
+    heatmap, xedges, yedges = np.histogram2d(x_coords, y_coords, bins=(50, 50))
+    
+    plt.figure(figsize=(10, 6))
+    sns.heatmap(heatmap.T, cmap="Reds", cbar=True)
+    plt.gca().invert_yaxis()  # Flip y-axis to match screen
+    plt.title("Eye Gaze Heatmap")
+    plt.show()
+
+plot_heatmap(gaze_points)
